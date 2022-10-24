@@ -21,6 +21,16 @@ lp_fn <- function(x) {
 }
 # Bipartition function
 # delineate bi-partitions using kmeans and compute expansion
+#' Title
+#'
+#' @param x is the eigen-decomposition step output
+#' @param reff_g is the original graph on which we computed the eigen decomposition
+#' @param tmp_res the resolution at which we are performing spectral clustering
+#'
+#' @return
+#' @export
+#'
+#' @examples
 part_cond_calc <- function(x, reff_g, tmp_res) {
   # perform kmeans with 2 clusters in first 2 smallest eigen vector space
   res <- kmeans(x$vectors, 2, nstart = 5)
