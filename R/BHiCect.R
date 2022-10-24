@@ -1,5 +1,13 @@
 # Recursive Bi-partitioning
 # Laplacian function
+#' Title
+#'
+#' @param x is as square matrix from which we compute the Laplacian
+#'
+#' @return
+#' @export
+#'
+#' @examples
 lp_fn <- function(x) {
   Dinv <- Diagonal(nrow(x), 1 / Matrix::rowSums(x))
 
