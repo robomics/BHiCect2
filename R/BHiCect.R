@@ -1,17 +1,18 @@
 # Recursive Bi-partitioning
 # Laplacian function
-#' Title
+#' Laplacian function
+#' @description Function producing the eigen decomposition of the Laplacian from the input matrix
 #'
 #' @param x is as square matrix from which we compute the Laplacian
 #'
-#' @return
+#' @return a list containing the two eigen vectors associated with the two smallest eigen values
 #' @export
 #'
 #' @examples
 lp_fn <- function(x) {
-  Dinv <- Diagonal(nrow(x), 1 / Matrix::rowSums(x))
+  Dinv <- Matrix::Diagonal(nrow(x), 1 / Matrix::rowSums(x))
 
-  lp_chr1 <- Diagonal(nrow(x), 1) - Dinv %*% x
+  lp_chr1 <- Matrix::Diagonal(nrow(x), 1) - Dinv %*% x
   if (dim(lp_chr1)[1] > 10000) {
     return(eigs_sym(lp_chr1, k = 2, sigma = 0, which = "LM", maxitr = 10000))
   } else {
@@ -19,15 +20,17 @@ lp_fn <- function(x) {
     return(list(vectors = temp[["vectors"]][, c(length(temp$values) - 1, length(temp$values))], values = temp[["values"]][c(length(temp$values) - 1, length(temp$values))]))
   }
 }
+
+
 # Bipartition function
 # delineate bi-partitions using kmeans and compute expansion
-#' Title
+#' Bipartition function
+#' @description Delineate bi-partitions using kmeans
+#' @param x  Output eigen-decomposition step
+#' @param reff_g Original graph on which we computed the eigen decomposition
+#' @param tmp_res The resolution at which we are performing spectral clustering
 #'
-#' @param x is the eigen-decomposition step output
-#' @param reff_g is the original graph on which we computed the eigen decomposition
-#' @param tmp_res the resolution at which we are performing spectral clustering
-#'
-#' @return
+#' @return Returns a list of two elements, corresponding to the bi-partition of the input graph
 #' @export
 #'
 #' @examples
@@ -39,11 +42,11 @@ part_cond_calc <- function(x, reff_g, tmp_res) {
   sub_g_list <- list()
   for (j in 1:2) {
     # create the subnetwork
-    sub_g_temp <- induced_subgraph(reff_g, which(res$cluster == j))
+    sub_g_temp <- igraph::induced_subgraph(reff_g, which(res$cluster == j))
 
     # save the members of considered cluster
     # create cluster label in considered subnetwork
-    temp_name <- paste(tmp_res, length(V(sub_g_temp)$name), length(E(sub_g_temp)), min(as.numeric(unlist(lapply(strsplit(V(sub_g_temp)$name, ","), "[", 1)))), max(as.numeric(unlist(lapply(strsplit(V(sub_g_temp)$name, ","), "[", 1)))), sep = "_")
+    temp_name <- paste(tmp_res, length(igraph::V(sub_g_temp)$name), length(igraph::E(sub_g_temp)), min(as.numeric(unlist(lapply(strsplit(igraph::V(sub_g_temp)$name, ","), "[", 1)))), max(as.numeric(unlist(lapply(strsplit(igraph::V(sub_g_temp)$name, ","), "[", 1)))), sep = "_")
     sub_g_list[[temp_name]] <- V(sub_g_temp)$name
     rm(sub_g_temp)
   }
@@ -51,6 +54,14 @@ part_cond_calc <- function(x, reff_g, tmp_res) {
 }
 
 # loop through all elements in nested list
+#' Title
+#'
+#' @param x list for which we wish to output all the nested lists within it
+#'
+#' @return a character vector tracing the full path of the nested lists
+#' @export
+#'
+#' @examples
 ff <- function(x) {
   if (class(x) == "list" & length(x) > 0) {
     lapply(x, ff)
@@ -60,7 +71,20 @@ ff <- function(x) {
 }
 
 # recursive bi-partitioning
-spec_bipart <- function(chr1_mat, g_chr1, res_set, res_num, chr_dat_l) {
+#' BHiCect
+#'
+#' @description Main function running the BHiCect algorithm
+#' @param chr1_mat Hi-C data square matrix representation
+#' @param g_chr1 Hi-C data igraph representation
+#' @param res_set Character vector of the available resolutions
+#' @param res_num Named numeric vector of the available resolutions
+#' @param chr_dat_l List with the HiC data at the available resolution
+#'
+#' @return a list with two elements, one containing a nested list representation of the clustering tree and another with a named list containing the bin content of each cluster found
+#' @export
+#'
+#' @examples
+BHiCect <- function(chr1_mat, g_chr1, res_set, res_num, chr_dat_l) {
   options(scipen = 999999999)
   # initialisation
   # container to save cluster hierarchy as list of lists
@@ -109,8 +133,8 @@ spec_bipart <- function(chr1_mat, g_chr1, res_set, res_num, chr_dat_l) {
       # when considered resolution equals the original resolution
       if (r == tmp_res) {
         tmp_dat <- chr_dat_l[[r]] %>%
-          filter(X1 %in% chr1_tree_cl[[cl]]) %>%
-          filter(X2 %in% chr1_tree_cl[[cl]])
+          dplyr::filter(X1 %in% chr1_tree_cl[[cl]]) %>%
+          dplyr::filter(X2 %in% chr1_tree_cl[[cl]])
         cl_dat_l[[cl]][[r]] <- tmp_dat
       }
       # when resolution higher than the original resolution
@@ -122,8 +146,8 @@ spec_bipart <- function(chr1_mat, g_chr1, res_set, res_num, chr_dat_l) {
         })))
         # extract corresponding edgelist from Hi-C data
         tmp_dat <- chr_dat_l[[r]] %>%
-          filter(X1 %in% as.character(r_bin)) %>%
-          filter(X2 %in% as.character(r_bin))
+          dplyr::filter(X1 %in% as.character(r_bin)) %>%
+          dplyr::filter(X2 %in% as.character(r_bin))
         cl_dat_l[[cl]][[r]] <- tmp_dat
       }
     }
@@ -191,13 +215,13 @@ spec_bipart <- function(chr1_mat, g_chr1, res_set, res_num, chr_dat_l) {
       }
 
       # create the subnetwork of considered cluster at best resolution
-      sub_g1 <- graph_from_data_frame(tmp_chr_dat, directed = F)
+      sub_g1 <- igraph::graph_from_data_frame(tmp_chr_dat, directed = F)
       # eleminate self loop
-      sub_g1 <- delete.edges(sub_g1, E(sub_g1)[which(which_loop(sub_g1))])
+      sub_g1 <- igraph::delete.edges(sub_g1, igraph::E(sub_g1)[which(igraph::which_loop(sub_g1))])
       # create the corresponding adjacency matrix
-      sub_g1_adj <- get.adjacency(sub_g1, type = "both", attr = "weight")
-      if (any(colSums(sub_g1_adj) == 0)) {
-        out <- which(colSums(sub_g1_adj) == 0)
+      sub_g1_adj <- igraph::get.adjacency(sub_g1, type = "both", attr = "weight")
+      if (any(Matrix::colSums(sub_g1_adj) == 0)) {
+        out <- which(Matrix::colSums(sub_g1_adj) == 0)
         sub_g1_adj <- sub_g1_adj[-out, ]
         sub_g1_adj <- sub_g1_adj[, -out]
       }
@@ -249,8 +273,8 @@ spec_bipart <- function(chr1_mat, g_chr1, res_set, res_num, chr_dat_l) {
             })))
             # extract corresponding edgelist from Hi-C data
             tmp_dat <- tmp_chr_dat_l[[r]] %>%
-              filter(X1 %in% as.character(r_bin)) %>%
-              filter(X2 %in% as.character(r_bin))
+              dplyr::filter(X1 %in% as.character(r_bin)) %>%
+              dplyr::filter(X2 %in% as.character(r_bin))
             tmp_cl_dat_l[[cl]][[r]] <- tmp_dat
           }
         }

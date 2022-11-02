@@ -2,13 +2,16 @@
 % Please edit documentation in R/BHiCect.R
 \name{lp_fn}
 \alias{lp_fn}
-\title{Title}
+\title{Laplacian function}
 \usage{
 lp_fn(x)
 }
 \arguments{
 \item{x}{is as square matrix from which we compute the Laplacian}
 }
+\value{
+a list containing the two eigen vectors associated with the two smallest eigen values
+}
 \description{
-Title
+Function producing the eigen decomposition of the Laplacian from the input matrix
 }

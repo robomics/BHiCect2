@@ -2,17 +2,20 @@
 % Please edit documentation in R/BHiCect.R
 \name{part_cond_calc}
 \alias{part_cond_calc}
-\title{Title}
+\title{Bipartition function}
 \usage{
 part_cond_calc(x, reff_g, tmp_res)
 }
 \arguments{
-\item{x}{is the eigen-decomposition step output}
+\item{x}{Output eigen-decomposition step}
 
-\item{reff_g}{is the original graph on which we computed the eigen decomposition}
+\item{reff_g}{Original graph on which we computed the eigen decomposition}
 
-\item{tmp_res}{the resolution at which we are performing spectral clustering}
+\item{tmp_res}{The resolution at which we are performing spectral clustering}
+}
+\value{
+Returns a list of two elements, corresponding to the bi-partition of the input graph
 }
 \description{
-Title
+Delineate bi-partitions using kmeans
 }
