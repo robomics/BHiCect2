@@ -7,11 +7,15 @@
 lp_fn(x)
 }
 \arguments{
-\item{x}{is as square matrix from which we compute the Laplacian}
+\item{x}{Square and symmetric matrix}
 }
 \value{
-a list containing the two eigen vectors associated with the two smallest eigen values
+list of two elements:
+\itemize{
+\item Tibble with two columns, one for each eigen-vector associated with the two smallest eigen-values
+\item Vector of the two smallest eigen-values
+}
 }
 \description{
-Function producing the eigen decomposition of the Laplacian from the input matrix
+Function computing the Laplacian
 }

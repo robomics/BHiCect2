@@ -2,24 +2,27 @@
 % Please edit documentation in R/BHiCect.R
 \name{BHiCect}
 \alias{BHiCect}
-\title{BHiCect}
+\title{BHiCect 2.0}
 \usage{
-BHiCect(chr1_mat, g_chr1, res_set, res_num, chr_dat_l)
+BHiCect(res_set, res_num, chr_dat_l, cl_var)
 }
 \arguments{
-\item{chr1_mat}{Hi-C data square matrix representation}
+\item{res_set}{Character vector with the HiC resolutions present in the data}
 
-\item{g_chr1}{Hi-C data igraph representation}
+\item{res_num}{Named numeric vector with the HiC resolutions present in the data}
 
-\item{res_set}{Character vector of the available resolutions}
+\item{chr_dat_l}{List of tibble containing the chromosome-wide HiC at multiple resolutions}
 
-\item{res_num}{Named numeric vector of the available resolutions}
-
-\item{chr_dat_l}{List with the HiC data at the available resolution}
+\item{cl_var}{Variable from smpl_thresh_tbl to use for partition}
 }
 \value{
-a list with two elements, one containing a nested list representation of the clustering tree and another with a named list containing the bin content of each cluster found
+List with:
+\itemize{
+\item Named list collecting the bin content of each found cluster
+\item Edge-list for the bi-partition tree
+\item Partition statistic table for each cluster
+}
 }
 \description{
-Main function running the BHiCect algorithm
+Main clustering function implementing recursive spectral clustering of HiC data
 }
