@@ -240,7 +240,6 @@ BHiCect<-function(res_set,res_num,chr_dat_l,cl_var){
   }))))]
   #if even the coarcest resolution doesn't fulffil the cirteria assign the starting resolution to it
   if(is.na(tmp_res)){tmp_res<-res_set[1]}
-  print(tmp_res)
   g_chr1<-igraph::graph_from_data_frame(chr_dat_l[[tmp_res]],directed = F)
   #eleminate self loop
   g_chr1<-igraph::delete.edges(g_chr1,E(g_chr1)[which(igraph::which_loop(g_chr1))])
