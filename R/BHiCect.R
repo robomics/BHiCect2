@@ -212,6 +212,7 @@ select_best_res_fn<-function(i,tmp_chr_dat_l,chr1_tree_cl,res_num,tmp_res,tmp_re
 #' @param res_num Named numeric vector with the HiC resolutions present in the data
 #' @param chr_dat_l List of tibble containing the chromosome-wide HiC at multiple resolutions
 #' @param cl_var Variable from smpl_thresh_tbl to use for partition
+#' @param nworkers Number of processes to launch for parallel computation
 #' @importFrom igraph E V
 #' @importFrom magrittr %>%
 #' @importFrom future plan multisession sequential
@@ -222,7 +223,7 @@ select_best_res_fn<-function(i,tmp_chr_dat_l,chr1_tree_cl,res_num,tmp_res,tmp_re
 #' * Partition statistic table for each cluster
 #' @export
 #'
-BHiCect<-function(res_set,res_num,chr_dat_l,cl_var){
+BHiCect<-function(res_set,res_num,chr_dat_l,cl_var,nworkers){
   #initialisation
   #container to save cluster hierarchy as list of lists
   chr1_tree_df<-tibble::tibble(from=character(),
@@ -304,7 +305,7 @@ BHiCect<-function(res_set,res_num,chr_dat_l,cl_var){
     ## - Parent partition stats
     ## - Children bin-content
     ## - Children-Parent edge-list
-    if(length(ok_part)>4){future::plan(multisession,workers=4)}else{plan(sequential)}
+    if(length(ok_part)>8){future::plan(multisession,workers=nworkers)}else{plan(sequential)}
     ok_part_res<-furrr::future_map(ok_part,function(i){
       tmp_res<-unlist(strsplit(i,split='_'))[1]
       #Only evaluate higher resolution if the considered cluster was found at coarser resolution than highest resolution

@@ -4,7 +4,7 @@
 \alias{BHiCect}
 \title{BHiCect 2.0}
 \usage{
-BHiCect(res_set, res_num, chr_dat_l, cl_var)
+BHiCect(res_set, res_num, chr_dat_l, cl_var, nworkers)
 }
 \arguments{
 \item{res_set}{Character vector with the HiC resolutions present in the data}
@@ -14,6 +14,8 @@ BHiCect(res_set, res_num, chr_dat_l, cl_var)
 \item{chr_dat_l}{List of tibble containing the chromosome-wide HiC at multiple resolutions}
 
 \item{cl_var}{Variable from smpl_thresh_tbl to use for partition}
+
+\item{nworkers}{Number of processes to launch for parallel computation}
 }
 \value{
 List with:
