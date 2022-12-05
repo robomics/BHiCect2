@@ -2,7 +2,7 @@
 % Please edit documentation in R/BHiCect.R
 \name{partition_fn}
 \alias{partition_fn}
-\title{Title}
+\title{Produce bin partitions from clustering step}
 \usage{
 partition_fn(reff_g, smpl_thresh_tbl, tmp_res, cl_var)
 }
@@ -19,5 +19,5 @@ partition_fn(reff_g, smpl_thresh_tbl, tmp_res, cl_var)
 list where each element is the bin content of the produced paritions
 }
 \description{
-Title
+Produce bin partitions from clustering step
 }

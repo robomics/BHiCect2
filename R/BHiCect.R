@@ -94,8 +94,7 @@ simple_partition_tbl_fn <- function(lp_res,tmp_res){
       cl_a<-.data$fiedler[which(.data$fiedler <= x)]
       cl_b<-.data$fiedler[which(.data$fiedler > x)]
       return(ss(rep(c(mean(cl_a),mean(cl_b)),c(length(cl_a),length(cl_b))))/ss(.data$fiedler))
-    })) %>%
-    dplyr::mutate(k.cl=stats::kmeans(.data$fiedler,2,nstart=1000)[["cluster"]])
+    }))
   smpl_thresh<-smpl_thresh_tbl %>%
     dplyr::slice_max(.data$stat) %>%
     dplyr::select(.data$fiedler) %>%
@@ -106,14 +105,14 @@ simple_partition_tbl_fn <- function(lp_res,tmp_res){
   return(smpl_thresh_tbl)
 }
 
-#' Title
+#' Produce bin partitions from clustering step
 #' @importFrom rlang !!! .data
 #' @param reff_g Parent cluster igraph network object
 #' @param smpl_thresh_tbl Tibble with bi-partition statistics
 #' @param tmp_res Resolution at which cluster is partitioned
 #' @param cl_var Variable from smpl_thresh_tbl to use for partition
 #'
-#' @return list where each element is the bin content of the produced paritions
+#' @return list where each element is the bin content of the produced partitions
 #' @export
 #'
 partition_fn<-function(reff_g,smpl_thresh_tbl,tmp_res,cl_var){
@@ -305,7 +304,11 @@ BHiCect<-function(res_set,res_num,chr_dat_l,cl_var,nworkers){
     ## - Parent partition stats
     ## - Children bin-content
     ## - Children-Parent edge-list
-    if(length(ok_part)>8){future::plan(multisession,workers=nworkers)}else{plan(sequential)}
+    if(length(ok_part)>4){
+      future::plan(multisession,workers=nworkers)
+    }else{
+        future::plan(sequential)
+      }
     ok_part_res<-furrr::future_map(ok_part,function(i){
       tmp_res<-unlist(strsplit(i,split='_'))[1]
       #Only evaluate higher resolution if the considered cluster was found at coarser resolution than highest resolution
@@ -367,7 +370,11 @@ BHiCect<-function(res_set,res_num,chr_dat_l,cl_var,nworkers){
     chr_cl_stat_l<-c(chr_cl_stat_l,tmp_cl_stat_l)
 
     # Extract candidate cluster HiC-data for next iteration
-    if(length(ok_part_temp)>4){plan(multisession,workers=4)}else{plan(sequential)}
+    if(length(ok_part_temp)>4){
+      plan(multisession,workers=nworkers)
+    }else{
+        plan(sequential)
+      }
     tmp_cl_dat_l<-furrr::future_map(ok_part_temp,function(cl){
       tmp_res<-unlist(strsplit(cl,split='_'))[1]
       tmp_res_set<-names(sort(res_num[which(res_num <= res_num[tmp_res])],decreasing = T))
