@@ -304,7 +304,7 @@ BHiCect<-function(res_set,res_num,chr_dat_l,cl_var,nworkers){
     ## - Parent partition stats
     ## - Children bin-content
     ## - Children-Parent edge-list
-    if(length(ok_part)>4){
+    if(length(ok_part)>600){
       future::plan(multisession,workers=nworkers)
     }else{
         future::plan(sequential)
@@ -370,7 +370,7 @@ BHiCect<-function(res_set,res_num,chr_dat_l,cl_var,nworkers){
     chr_cl_stat_l<-c(chr_cl_stat_l,tmp_cl_stat_l)
 
     # Extract candidate cluster HiC-data for next iteration
-    if(length(ok_part_temp)>4){
+    if(length(ok_part_temp)>600){
       plan(multisession,workers=nworkers)
     }else{
         plan(sequential)

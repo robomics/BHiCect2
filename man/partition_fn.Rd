@@ -16,7 +16,7 @@ partition_fn(reff_g, smpl_thresh_tbl, tmp_res, cl_var)
 \item{cl_var}{Variable from smpl_thresh_tbl to use for partition}
 }
 \value{
-list where each element is the bin content of the produced paritions
+list where each element is the bin content of the produced partitions
 }
 \description{
 Produce bin partitions from clustering step
