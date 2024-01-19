@@ -198,7 +198,6 @@ select_best_res_fn<-function(i,tmp_chr_dat_l,chr1_tree_cl,res_num,tmp_res,tmp_re
   if(sum(res_select)==0){tmp_res<-unlist(strsplit(i,split='_'))[1]}
   # set best Hi-C resolution
   if(sum(res_select)>0){tmp_res<-names(res_select[max(which(res_select))])}
-  #rm(res_select,tmp_dat,nbin,tmp_res_set,res_select,r)
 
   #build the cluster edgelist at best resolution
   return(tmp_res)
