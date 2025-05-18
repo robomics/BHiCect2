@@ -221,7 +221,7 @@ select_best_res_fn<-function(i,tmp_chr_dat_l,chr1_tree_cl,res_num,tmp_res,tmp_re
 #' * Partition statistic table for each cluster
 #' @export
 #'
-BHiCect<-function(res_set,res_num,chr_dat_l,cl_var,nworkers){
+BHiCect<-function(res_set,res_num,chr_dat_l,cl_var = "smpl.cl",nworkers){
   #initialisation
   #container to save cluster hierarchy as list of lists
   chr1_tree_df<-tibble::tibble(from=character(),
@@ -280,11 +280,19 @@ BHiCect<-function(res_set,res_num,chr_dat_l,cl_var,nworkers){
       }
       # when resolution higher than the original resolution
       else{
+        print(chr1_tree_cl[[cl]])
+        print(tmp_res)
+        print(r)
+
         # create the higher resolution bins expecting a 0-start counting of bins
         r_bin<-unique(as.integer(sapply(chr1_tree_cl[[cl]],function(x){
-          tmp<-seq(as.integer(x),as.integer(x)+res_num[tmp_res],by=res_num[r])
+          print(res_num[r])
+
+          tmp<-seq(from = as.integer(x),to = (as.integer(x)+res_num[tmp_res]),by=res_num[r])
           return(tmp[-length(tmp)])
         })))
+        print(r)
+
         #extract corresponding edgelist from Hi-C data
         tmp_dat<-chr_dat_l[[r]]%>%
           dplyr::filter(.data$X1 %in% as.integer(r_bin))%>%
@@ -295,6 +303,8 @@ BHiCect<-function(res_set,res_num,chr_dat_l,cl_var,nworkers){
     }
   }
   rm(lpe_chr1,res_chr1,r,r_bin,cl,tmp_res,tmp_res_set)
+  print(length(ok_part))
+
   #recursive looping
   while(length(ok_part)>0){
     message(paste("Processing",length(ok_part),"clusters"))
