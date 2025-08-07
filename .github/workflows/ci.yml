@@ -1,0 +1,99 @@
+# Copyright (C) 2025 Roberto Rossini (roberros@uio.no)
+# SPDX-License-Identifier: MIT
+
+name: CI
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ci.yml"
+      - "R/**"
+      - "renv/**"
+      - "tests/**"
+      - "DESCRIPTION"
+      - "NAMESPACE"
+    tags:
+      - "v*.*.*"
+
+  pull_request:
+    paths:
+      - ".github/workflows/ci.yml"
+      - "R/**"
+      - "renv/**"
+      - "tests/**"
+      - "DESCRIPTION"
+      - "NAMESPACE"
+
+# https://stackoverflow.com/a/72408109
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  ci:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: windows-latest, r-version: 4.5 }
+          - { os: macos-latest, r-version: 4.5 }
+          - { os: ubuntu-latest, r-version: 4.0 }
+          - { os: ubuntu-latest, r-version: 4.1 }
+          - { os: ubuntu-latest, r-version: 4.2 }
+          - { os: ubuntu-latest, r-version: 4.3 }
+          - { os: ubuntu-latest, r-version: 4.4 }
+          - { os: ubuntu-latest, r-version: 4.5 }
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      - name: Detect number of CPUs
+        run: |
+          cmd='import multiprocessing as mp; print(mp.cpu_count())'
+          NPROC="$(python -c "$cmd")"
+          echo "NPROC=$NPROC" >> "$GITHUB_ENV"
+
+      - name: Install pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: ${{ matrix.r-version }}
+          use-public-rspm: true
+          Ncpus: ${{ env.NPROC }}
+
+      - name: Add requirements
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+
+      - name: Build and test package
+        uses: r-lib/actions/check-r-package@v2
+
+  ci-status-check:
+    name: Status Check (CI)
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    needs:
+      - ci
+
+    steps:
+      - name: Collect job results
+        if: needs.ci.result != 'success'
+        run: exit 1
