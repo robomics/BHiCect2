@@ -4,8 +4,7 @@
 
 <!-- badges: end -->
 
-<!-- markdownlint-disable-next-line MD042 -->
-The goal of BHiCect2 is to cluster HiC data as described in our [manuscript]().
+The goal of BHiCect2 is to cluster HiC data as described in our [manuscript](). <!-- markdownlint-disable-line MD042 -->
 Briefly, we decompose intra-chromosomal HiC data into nested clusters of chromosome regions across multiple resolutions
 starting from the complete chromosome all the way to DNA-loops at the maximum resolution provided.
 
@@ -13,7 +12,7 @@ starting from the complete chromosome all the way to DNA-loops at the maximum re
 
 You can install the current version of BHiCect2 from [GitHub](https://github.com/) with:
 
-``` r
+```r
 # install.packages("devtools")
 devtools::install_github("princeps091-binf/BHiCect2")
 ```
@@ -23,7 +22,7 @@ devtools::install_github("princeps091-binf/BHiCect2")
 BHiCect2 offers a core function to cluster the input HiC data.
 The expected input data to BHiCect2 is a list of dataframes containing the HiC data in a three columns format for the various resolution provided by the user.
 
-``` r
+```r
 library(BHiCect2)
 ## basic example using chromosome 22 data from human GM12878 data (Rao et al. 2014)
 data(chr_dat_l)
