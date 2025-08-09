@@ -35,7 +35,3 @@ names(res_num)<-res_set
 BHiCect_results<-BHiCect(res_set,res_num,chr_dat_l,4)
 
 ```
-
-An overview that describes the main components of the package.
-For more complex packages, this will point to vignettes for more details.
-This is also a good place to describe how your package fits into the ecosystem of its target domain.
