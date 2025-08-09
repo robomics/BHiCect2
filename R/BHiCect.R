@@ -241,7 +241,7 @@ BHiCect <- function(res_set, res_num, chr_dat_l, cl_var = "smpl.cl", nworkers) {
     tmp_res <- res_set[1]
   }
   g_chr1 <- igraph::graph_from_data_frame(chr_dat_l[[tmp_res]], directed = F)
-  # eleminate self loop
+  # eliminate self loop
   g_chr1 <- igraph::delete.edges(g_chr1, E(g_chr1)[which(igraph::which_loop(g_chr1))])
   chr_mat <- get_adj_mat_fn(g_chr1)
   # whole chromosome laplacian
@@ -267,7 +267,7 @@ BHiCect <- function(res_set, res_num, chr_dat_l, cl_var = "smpl.cl", nworkers) {
   # given starting best resolution set the further resolutions to consider at later iterations
   tmp_res_set <- res_set[which(res_set == tmp_res):length(res_set)]
   # build a temporary list containing the subset of Hi-C interactions constitutive of the found clusters at all
-  # higher resolutions for the consdiered cluster
+  # higher resolutions for the considered cluster
   cl_dat_l <- vector("list", length(ok_part))
   for (cl in ok_part) {
     for (r in tmp_res_set) {
@@ -337,7 +337,7 @@ BHiCect <- function(res_set, res_num, chr_dat_l, cl_var = "smpl.cl", nworkers) {
       }
 
       sub_g1 <- igraph::graph_from_data_frame(tmp_chr_dat, directed = F)
-      # eleminate self loop
+      # eliminate self loop
       sub_g1 <- igraph::delete.edges(sub_g1, E(sub_g1)[which(igraph::which_loop(sub_g1))])
       # create the corresponding adjacency matrix
       sub_g1_adj <- get_adj_mat_fn(sub_g1)
