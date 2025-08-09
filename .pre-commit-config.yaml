@@ -1,0 +1,51 @@
+# Copyright (C) 2025 Roberto Rossini <roberros@uio.no>
+#
+# SPDX-License-Identifier: MIT
+
+default_language_version:
+  python: python3 # Defaults to python2, so override it.
+
+exclude: ^tests/data
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-shebang-scripts-are-executable
+      - id: check-symlinks
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: forbid-submodules
+      - id: mixed-line-ending
+        args:
+          - --fix=lf
+      - id: trailing-whitespace
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.7
+    hooks:
+      - id: actionlint
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        exclude: ^renv\.lock$
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.18.0
+    hooks:
+      - id: markdownlint-cli2
+  - repo: local
+    hooks:
+      - id: styler
+        name: styler
+        entry: utils/devel/run_styler
+        types_or: [r]
+        language: r
+        additional_dependencies: ["roxygen2", "styler"]
+      - id: prettier
+        name: prettier
+        entry: prettier
+        language: node
+        additional_dependencies: [prettier@3.6.2]
+        types: [json, markdown, yaml]
+        args: ["--write", "--ignore-unknown"]
