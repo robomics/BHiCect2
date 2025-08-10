@@ -1,5 +1,6 @@
 # Ignored folders
 data/**
+renv/
 
 # Ignored files
 .DS_Store
