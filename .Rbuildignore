@@ -1,6 +1,16 @@
-^BHiCect2\.Rproj$
-^\.Rproj\.user$
-^LICENSE\.md$
+# Ignored folders
+^BHiCect2.Rcheck$
 ^data-raw$
 ^renv$
+^\.idea$
+^\.github$
+^\.vscode$
+
+# Ignored files
+.*\.tar\.gz$
+^BHiCect2\.Rproj$
+^LICENSE\.md$
 ^renv\.lock$
+^\.Rprofile$
+^\.Rproj\.user$
+^\.gitignore$

@@ -1,15 +1,18 @@
 Package: BHiCect2
+Type: Package
 Title: Implementation of BHiCect2
 Version: 0.0.0.9000
 Authors@R:
-    person("Vipin", "Kumar", , "princeps091@gmail.com", role = c("aut", "cre"))
+    person("Vipin", "Kumar", email="princeps091@gmail.com", role = c("aut", "cre"))
+Maintainer: Vipin Kumar <princeps091@gmail.com>
 Description: Executes the BHiCect2 Multiresolution Clustering Method.
 License: MIT + file LICENSE
+URL: https://github.com/princeps091-binf/BHiCect2
+BugReports: https://github.com/princeps091-binf/BHiCect2/issues
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.0
 Imports:
-    caret,
     dplyr,
     furrr,
     future,
@@ -19,15 +22,15 @@ Imports:
     purrr,
     rlang,
     RSpectra,
-    stringr,
-    tibble,
-    withr
+    tibble
 Suggests:
+    caret,
     spelling,
-    testthat (>= 3.0.0)
+    stringr,
+    testthat (>= 3.0.0),
+    withr
 Language: en-US
 Config/testthat/edition: 3
-Depends:
-    R (>= 2.10)
+Depends: R (>= 4.0)
 LazyData: true
 LazyDataCompression: xz
