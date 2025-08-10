@@ -1,7 +1,16 @@
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
-.Rdata
-.httr-oauth
+# Ignored folders
+data/**
+
+# Ignored files
 .DS_Store
+.RData
+.Rdata
+.Rhistory
+.Rproj.user
+.Ruserdata
+.httr-oauth
+.idea
+.vscode
+
+# Ignore exceptions
+!data/chr_dat_l.rda
