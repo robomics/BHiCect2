@@ -1,0 +1,9 @@
+#!/usr/bin/env Rscript
+
+# Copyright (C) 2025 Roberto Rossini <roberros@uio.no>
+#
+# SPDX-License-Identifier: MIT
+
+library(styler)
+
+style_file(commandArgs(trailingOnly = TRUE))
